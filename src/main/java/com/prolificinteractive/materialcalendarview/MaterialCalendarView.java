@@ -68,6 +68,10 @@ public class MaterialCalendarView extends ViewGroup {
 
     public static final int INVALID_TILE_DIMENSION = -10;
 
+    public int getMeasuredTileHeight() {
+        return measuredTileHeight;
+    }
+
     /**
      * {@linkplain IntDef} annotation for selection mode.
      *
@@ -163,7 +167,7 @@ public class MaterialCalendarView extends ViewGroup {
     /**
      * Default tile size in DIPs. This is used in cases where there is no tile size specificed and the view is set to {@linkplain ViewGroup.LayoutParams#WRAP_CONTENT WRAP_CONTENT}
      */
-    public static final int DEFAULT_TILE_SIZE_DP = 44;
+    public static final int DEFAULT_TILE_SIZE_DP = 20;
     private static final int DEFAULT_DAYS_IN_WEEK = 7;
     private static final int DEFAULT_MAX_WEEKS = 6;
     private static final int DAY_NAMES_ROW = 1;
@@ -236,6 +240,7 @@ public class MaterialCalendarView extends ViewGroup {
     private boolean allowClickDaysOutsideCurrentMonth = true;
     private int firstDayOfWeek;
     private boolean showWeekDays;
+    private int measuredTileHeight;
 
     private State state;
 
@@ -1670,6 +1675,8 @@ public class MaterialCalendarView extends ViewGroup {
             measureTileSize = desiredTileHeight;
         }
 
+        //measureTileSize = Math.min(measureTileWidth, measureTileHeight);
+
         if (measureTileSize > 0) {
             //Use measureTileSize if set
             measureTileHeight = measureTileSize;
@@ -1685,9 +1692,10 @@ public class MaterialCalendarView extends ViewGroup {
             }
         }
 
+        measuredTileHeight = measureTileHeight;
         //Calculate our size based off our measured tile size
         int measuredWidth = measureTileWidth * DEFAULT_DAYS_IN_WEEK;
-        int measuredHeight = measureTileHeight * viewTileHeight;
+        int measuredHeight = measureTileHeight * (viewTileHeight-1); // -1 is added because topbar and weedaysbar are half in size
 
         //Put padding back in from when we took it away
         measuredWidth += getPaddingLeft() + getPaddingRight();
@@ -1716,6 +1724,13 @@ public class MaterialCalendarView extends ViewGroup {
                     p.height * measureTileHeight,
                     MeasureSpec.EXACTLY
             );
+
+            if (child instanceof LinearLayout) {
+                childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
+                        p.height * (int)((double)measureTileHeight*0.5),
+                        MeasureSpec.EXACTLY
+                );
+            }
 
             child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
         }

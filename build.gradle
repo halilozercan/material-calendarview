@@ -1,29 +1,28 @@
-task wrapper(type: Wrapper) {
-    //if you change this version you will need to run the 'gradlew wrapper' command twice from the command line to auto update the gradle cache
-    gradleVersion = "4.7"
-}
-buildscript {
-    repositories {
-        google()
-        jcenter()
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion configuration.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion configuration.minSdkVersion
+        targetSdkVersion configuration.targetSdkVersion
+
+        versionCode 25
+        versionName "1.6.1"
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+
+    lintOptions {
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        // Here for convience when testing new releases
-        // maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    }
+dependencies {
+    implementation "com.android.support:support-v4:27.1.1"
+    implementation libraries.supportAppCompat
+    implementation "com.android.support:support-annotations:27.1.1"
 }
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
-apply from: rootProject.file('dependencies.gradle')

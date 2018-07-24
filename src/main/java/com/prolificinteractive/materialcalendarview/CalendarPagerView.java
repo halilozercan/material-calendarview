@@ -2,11 +2,14 @@ package com.prolificinteractive.materialcalendarview;
 
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatCheckedTextView;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.LinearLayout;
 
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView.ShowOtherDates;
 import com.prolificinteractive.materialcalendarview.format.DayFormatter;
@@ -269,6 +272,13 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
                     measureTileHeight,
                     MeasureSpec.EXACTLY
             );
+
+            if (!(child instanceof AppCompatCheckedTextView)) {
+                childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
+                        (int) ((double)measureTileHeight*0.5),
+                        MeasureSpec.EXACTLY
+                );
+            }
 
             child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
         }
